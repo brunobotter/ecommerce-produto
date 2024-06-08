@@ -1,4 +1,4 @@
-package handler
+package vo
 
 import "fmt"
 
@@ -13,6 +13,11 @@ type UpdateProdutoRequest struct {
 	Valor      float64 `json:"valor"`
 	Quantidade int64   `json:"quantidade"`
 	Descricao  string  `json:"descricao"`
+}
+
+type VendaProdutoRequest struct {
+	Id         string `json:"id"`
+	Quantidade int64  `json:"quantidade"`
 }
 
 func errParamIsRequired(name, typ string) error {
