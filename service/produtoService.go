@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/brunobotter/ecommerce-produto/scheamas"
 	"github.com/brunobotter/ecommerce-produto/vo"
@@ -11,6 +12,9 @@ import (
 // db é a instância do banco de dados global
 var db *gorm.DB
 
+func InitializeService(database *gorm.DB) {
+	db = database
+}
 func CreateProduto(request vo.CreateProdutoRequest) (scheamas.Produto, error) {
 	produto := scheamas.Produto{
 		Nome:       request.Nome,
@@ -83,19 +87,31 @@ func UpdateProduto(id string, request vo.UpdateProdutoRequest) (scheamas.Produto
 	return produto, nil
 }
 
-func VendaProduto(venda vo.VendaProdutoRequest) (scheamas.Produto, error) {
+func VendaProduto(venda vo.VendaProdutoRequest) (vo.VendaResponse, error) {
 	produto := scheamas.Produto{}
+	var vendas vo.VendaResponse
 	if err := db.First(&produto, venda.Id).Error; err != nil {
-		return produto, err
+		return vo.VendaResponse{}, err
 	}
-	if produto.Quantidade >= venda.Quantidade {
-		venda := produto.Quantidade - venda.Quantidade
-		produto.Quantidade = venda
+	if (produto.Quantidade >= venda.Quantidade) && venda.Quantidade > 0 {
+		quantidade := produto.Quantidade - venda.Quantidade
+		produto.Quantidade = quantidade
+		vendas = VendaResponse(produto, venda.Quantidade)
 	} else {
-		return produto, fmt.Errorf("erro ao deletar produto com ID %s", venda.Id)
+		return vo.VendaResponse{}, fmt.Errorf("erro quantidade de itens insuficiente no estoque!")
 	}
 	if err := db.Save(&produto).Error; err != nil {
-		return produto, err
+		return vo.VendaResponse{}, err
 	}
-	return produto, nil
+	return vendas, nil
+}
+
+func VendaResponse(produto scheamas.Produto, quantidade int64) vo.VendaResponse {
+	return vo.VendaResponse{
+		Id:         strconv.Itoa(int(produto.ID)),
+		Nome:       produto.Nome,
+		Quantidade: quantidade,
+		Valor:      int64(produto.Valor),
+		Descricao:  produto.Descricao,
+	}
 }
