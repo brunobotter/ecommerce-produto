@@ -24,9 +24,9 @@ func SendSuccess(ctx *gin.Context, op string, data interface{}) {
 }
 
 type VendaResponse struct {
-	Id         string `json:"Id"`
-	Nome       string `json:"Nome"`
-	Quantidade int64  `json:"Quantidade"`
-	Valor      int64  `json:"Valor"`
-	Descricao  string `json:"Descricao"`
+	Id         uint    `json:"Id"`
+	Nome       string  `json:"Nome"`
+	Quantidade int64   `json:"Quantidade"`
+	Valor      float64 `json:"Valor"`
+	Descricao  string  `json:"Descricao"`
 }

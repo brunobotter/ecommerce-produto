@@ -2,8 +2,8 @@ package service
 
 import (
 	"fmt"
-	"strconv"
 
+	"github.com/brunobotter/ecommerce-produto/config"
 	"github.com/brunobotter/ecommerce-produto/scheamas"
 	"github.com/brunobotter/ecommerce-produto/vo"
 	"gorm.io/gorm"
@@ -43,13 +43,15 @@ func DeleteProduto(id string) error {
 	return nil
 }
 
-func ShowProduto(id string) (scheamas.Produto, error) {
+func ShowProduto(id string) (scheamas.ProdutoResponse, error) {
+	logger := config.GetLogger("ShowProduto")
 	produto := scheamas.Produto{}
 	if err := db.First(&produto, id).Error; err != nil {
-		return produto, err
+		return scheamas.ProdutoResponse{}, err
 	}
-
-	return produto, nil
+	responseProduto := scheamas.ToprodutoResponse(produto)
+	logger.Debugf("produto: %v", responseProduto)
+	return responseProduto, nil
 }
 
 func ListProdutos() ([]scheamas.Produto, error) {
@@ -88,6 +90,7 @@ func UpdateProduto(id string, request vo.UpdateProdutoRequest) (scheamas.Produto
 }
 
 func VendaProduto(venda vo.VendaProdutoRequest) (vo.VendaResponse, error) {
+	logger := config.GetLogger("VendaProduto")
 	produto := scheamas.Produto{}
 	var vendas vo.VendaResponse
 	if err := db.First(&produto, venda.Id).Error; err != nil {
@@ -96,22 +99,24 @@ func VendaProduto(venda vo.VendaProdutoRequest) (vo.VendaResponse, error) {
 	if (produto.Quantidade >= venda.Quantidade) && venda.Quantidade > 0 {
 		quantidade := produto.Quantidade - venda.Quantidade
 		produto.Quantidade = quantidade
-		vendas = VendaResponse(produto, venda.Quantidade)
+		total := produto.Valor * float64(venda.Quantidade)
+		vendas = VendaResponse(produto, venda.Quantidade, total)
 	} else {
 		return vo.VendaResponse{}, fmt.Errorf("erro quantidade de itens insuficiente no estoque!")
 	}
 	if err := db.Save(&produto).Error; err != nil {
 		return vo.VendaResponse{}, err
 	}
+	logger.Debugf("vendas %v", vendas)
 	return vendas, nil
 }
 
-func VendaResponse(produto scheamas.Produto, quantidade int64) vo.VendaResponse {
+func VendaResponse(produto scheamas.Produto, quantidade int64, total float64) vo.VendaResponse {
 	return vo.VendaResponse{
-		Id:         strconv.Itoa(int(produto.ID)),
+		Id:         produto.ID,
 		Nome:       produto.Nome,
 		Quantidade: quantidade,
-		Valor:      int64(produto.Valor),
+		Valor:      total,
 		Descricao:  produto.Descricao,
 	}
 }

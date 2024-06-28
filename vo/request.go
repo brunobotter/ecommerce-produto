@@ -16,7 +16,7 @@ type UpdateProdutoRequest struct {
 }
 
 type VendaProdutoRequest struct {
-	Id         string `json:"id"`
+	Id         string `json:"produtoId"`
 	Quantidade int64  `json:"quantidade"`
 }
 

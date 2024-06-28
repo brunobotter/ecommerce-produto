@@ -1,8 +1,6 @@
 package scheamas
 
 import (
-	"time"
-
 	"gorm.io/gorm"
 )
 
@@ -15,10 +13,19 @@ type Produto struct {
 }
 
 type ProdutoResponse struct {
-	Id         uint      `json:"id"`
-	CreateAt   time.Time `json:"createAt"`
-	Nome       string    `json:"nome"`
-	Valor      float64   `json:"valor"`
-	Quantidade int64     `json:"quantidade"`
-	Descricao  string    `json:"descricao"`
+	Id         uint    `json:"id"`
+	Nome       string  `json:"nome"`
+	Valor      float64 `json:"valor"`
+	Quantidade int64   `json:"quantidade"`
+	Descricao  string  `json:"descricao"`
+}
+
+func ToprodutoResponse(produto Produto) ProdutoResponse {
+	return ProdutoResponse{
+		Id:         produto.ID,
+		Nome:       produto.Nome,
+		Valor:      produto.Valor,
+		Quantidade: produto.Quantidade,
+		Descricao:  produto.Descricao,
+	}
 }

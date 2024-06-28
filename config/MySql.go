@@ -8,7 +8,7 @@ import (
 
 func InitializeSql() (*gorm.DB, error) {
 	logger := GetLogger("mysql")
-	dsn := "root:171191@tcp(127.0.0.1:3306)/produto?charset=utf8mb4&parseTime=true&loc=Local"
+	dsn := "admin:bruno171191@tcp(produto.cfwgqgmc8vat.us-east-1.rds.amazonaws.com:3306)/produto?charset=utf8mb4&parseTime=true&loc=Local"
 	//create db and connection
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
