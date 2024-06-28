@@ -142,6 +142,7 @@ Resources:
     DependsOn: Listener
     Properties:
       Cluster: !Ref ECSCluster
+      ServiceName: !Sub "${AWS::StackName}"
       TaskDefinition: !Ref ECSFargateTaskDefinition
       LaunchType: FARGATE
       NetworkConfiguration:
