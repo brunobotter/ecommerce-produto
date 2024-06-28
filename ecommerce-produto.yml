@@ -124,7 +124,7 @@ Resources:
       Memory: '512'
       ExecutionRoleArn: !GetAtt ECSTaskExecutionRole.Arn
       ContainerDefinitions:
-        - Name: my-container
+        - Name: ecommerce-produto
           Image: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/ecommerce-produto:latest"
           Essential: true
           PortMappings:
@@ -154,7 +154,7 @@ Resources:
             - !Ref ECSSecurityGroup
       DesiredCount: 1
       LoadBalancers:
-        - ContainerName: my-container
+        - ContainerName: ecommerce-produto
           ContainerPort: 8081
           TargetGroupArn: !Ref ECSTargetGroup
 

@@ -2,7 +2,7 @@
     "taskDefinitionArn": "arn:aws:ecs:us-east-1:730335442778:task-definition/produto-fargate-task:1",
     "containerDefinitions": [
         {
-            "name": "my-container",
+            "name": "ecommerce-produto",
             "image": "730335442778.dkr.ecr.us-east-1.amazonaws.com/ecommerce-produto:latest",
             "cpu": 0,
             "links": [],
