@@ -99,3 +99,8 @@ func VendaProdutoHandler(ctx *gin.Context) {
 
 	vo.SendSuccess(ctx, "Produto vendido com sucesso", produto)
 }
+func HealthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "OK",
+	})
+}

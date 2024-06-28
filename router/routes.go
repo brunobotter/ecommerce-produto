@@ -9,6 +9,7 @@ func initializeRoutes(router *gin.Engine) {
 	handler.InitializeHandler()
 	v1 := router.Group("/api/v1")
 	{
+		v1.GET("/health", handler.HealthCheck)
 		v1.GET("/produto/:id", handler.ShowProdutoHandler)
 		v1.GET("/produtos", handler.ListProdutoHandler)
 		v1.POST("/produto", handler.CreateProdutoHandler)
