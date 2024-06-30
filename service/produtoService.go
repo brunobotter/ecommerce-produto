@@ -94,17 +94,21 @@ func VendaProduto(venda vo.VendaProdutoRequest) (vo.VendaResponse, error) {
 	produto := scheamas.Produto{}
 	var vendas vo.VendaResponse
 	if err := db.First(&produto, venda.Id).Error; err != nil {
+		logger.Error("erro buscar no banco")
 		return vo.VendaResponse{}, err
 	}
+	logger.Debugf("antes venda %v", venda)
 	if (produto.Quantidade >= venda.Quantidade) && venda.Quantidade > 0 {
 		quantidade := produto.Quantidade - venda.Quantidade
 		produto.Quantidade = quantidade
 		total := produto.Valor * float64(venda.Quantidade)
 		vendas = VendaResponse(produto, venda.Quantidade, total)
 	} else {
+		logger.Error("erro quantidade de itens insuficiente no estoque!")
 		return vo.VendaResponse{}, fmt.Errorf("erro quantidade de itens insuficiente no estoque!")
 	}
 	if err := db.Save(&produto).Error; err != nil {
+		logger.Error("erro salvar no banco")
 		return vo.VendaResponse{}, err
 	}
 	logger.Debugf("vendas %v", vendas)

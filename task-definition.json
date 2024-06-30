@@ -41,7 +41,7 @@
         }
     ],
     "family": "produto-fargate-task",
-    "executionRoleArn": "arn:aws:iam::730335442778:role/ecommerce-produto-ECSTaskExecutionRole-y6ltOZRlSsIF",
+    "executionRoleArn": "arn:aws:iam::730335442778:role/ecommerce-produto-ECSTaskExecutionRole-eZFP3XmlIgwO",
     "networkMode": "awsvpc",
     "revision": 1,
     "volumes": [],
